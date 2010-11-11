@@ -6,3 +6,4 @@ nconvert -out jpeg -rmeta -keepfiledate -rexifthumb -opthuff -o thumbnail\TN-%% 
 if not errorlevel 1 goto fin
 pause
 :fin
+::commentaire
