@@ -1,0 +1,1 @@
+jhead -ft -autorot *.jpg

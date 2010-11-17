@@ -1,0 +1,1 @@
+exiftool -d %%m_%%d/%%Y-%%m-%%d_%%H-%%M-%%S.jpg "-filename<DateTimeOriginal" *.jpg
