@@ -1,36 +1,26 @@
 @echo off
-rem 1.2.2 18 10 2010
-rem petites optimisations plus passage en francais
-rem 1.2.1 21 03 2010 
-rem ajout d'une option quitter
-rem v1.2 le 09 02 2010
-rem passage a nconvert
-rem choice
-rem v1.1 le 25 11 2008
-rem changement nom de renomage avec des - 
-rem remplacment de sample par resize dans convert
-rem rajout d'un commentaire exif  avec mon id parano
-rem copie des fichers dans le repertoire transfert avec le repertoire à la bonne date
+
 :start
+rem echo off
 echo ajout de commentaire exif
 set choice=
-set /p choice=1. parano 2. francois pegory 3. quitter
+rem set /p choice=1. rien 2. francois pegory 3. quitter
 if not '%choice%'=='' set choice=%choice:~0,1%
-if '%choice%'=='1' exiftool -L -lang fr -e -v0 -m -fast2 -P -overwrite_original -UserComment=alpha-75982 -Artist=alpha-75982 -copyright=alpha-75982 *.jpg
-if '%choice%'=='2' exiftool -L -lang fr -e -v0 -m -fast2 -P -overwrite_original "-UserComment=FRANCOIS PEGORY" "-Artist=FRANCOIS PEGORY" "-copyright=FRANCOIS PEGORY" *.jpg
+if '%choice%'=='2' exiftool -L -lang fr -e -v0 -m -fast2 -P -overwrite_original "-UserComment=FRANCOIS PEGORY" "-Artist=FRANCOIS PEGORY" "-copyright=FRANCOIS PEGORY" .
 if '%choice%'=='3' goto EOL
-rem copie reduction 
-if not exist reduit md reduit
-echo reduction des photos
-nconvert -out jpeg -i -opthuff -o reduit\%% -q 80 -ratio -rtype lanczos -resize 800 600 -rflag orient *.jpg
-echo rotation auto de la photo avec la date de prise en date de modif du fichier
-jhead -ft -autorot *.jpg
+echo rotation 
+d:\bat\jhead -ft -autorot -exonly *.*
+
 echo modification du nom du fichier
-exiftool -L -overwrite_original -lang fr -v0 -m -fast2 -P -d %%Y/%%m_%%d/%%Y-%%m-%%d_%%H-%%M-%%S.jpg "-filename<DateTimeOriginal" *.jpg
-echo idem images reduites
-jhead -ft -autorot reduit\*.jpg
-exiftool -L -overwrite_original -lang fr -v0 -m -fast2 -P -d %%Y/%%m_%%d/%%Y%%m%%d/%%Y-%%m-%%d_%%H-%%M-%%S.jpg "-filename<DateTimeOriginal" reduit\*.jpg
-del *.jpg_original
-rmdir reduit
+rem -preserve : preserbe date time, -e dont calculate composite tag, -F Fix the base for maker notes offset
+exiftool -r -progress -preserve -overwrite_original -fixbase --composite -fast2 -ignoreMinorErrors "-FileName<DateTimeOriginal" -dateformat "%%Y/%%m_%%d/%%Y%%m%%d_%%H%%M%%S%%%%-c.%%%%e" .
+modification du nom des fichier video
+exiftool -preserve -overwrite_original -fixbase -progress --composite -fast2 -ignoreMinorErrors -ext avi -r "-FileName<DateTimeOriginal" -dateformat "%%Y/%%m_%%d/%%Y%%m%%d_%%H%%M%%S%%%%-c.%%%%e" .
+exiftool -preserve -overwrite_original -fixbase -progress --composite -fast2 -ignoreMinorErrors -ext mov -r "-FileName<CreateDate" -dateformat "%%Y/%%m_%%d/%%Y%%m%%d_%%H%%M%%S%%%%-c.%%%%e" .
+
+rem quelques petits ajustemment
+del *.thm 
+del *.tmp
+if %ERRORLEVEL% NEQ 0 goto EOL
 pause
 :EOL
