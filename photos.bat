@@ -1,5 +1,16 @@
 @echo off
-
+rem on va vers le repertoire de lancement
+setlocal
+set "str1=@%1"
+set str | findstr "\^^^^^@">nul && (
+  set "str1=%str1:^^^^^@=@%"
+)
+if ["%str1:"=^^^^^@%"] NEQ "" (
+    %~d1
+    cd "%~pn1"
+)
+cd
+pause
 :start
 rem echo off
 echo ajout de commentaire exif
@@ -14,7 +25,7 @@ d:\bat\jhead -ft -autorot -exonly *.*
 echo modification du nom du fichier
 rem -preserve : preserbe date time, -e dont calculate composite tag, -F Fix the base for maker notes offset
 exiftool -r -progress -preserve -overwrite_original -fixbase --composite -fast2 -ignoreMinorErrors "-FileName<DateTimeOriginal" -dateformat "%%Y/%%m_%%d/%%Y%%m%%d_%%H%%M%%S%%%%-c.%%%%e" .
-modification du nom des fichier video
+echo modification du nom des fichier video
 exiftool -preserve -overwrite_original -fixbase -progress --composite -fast2 -ignoreMinorErrors -ext avi -r "-FileName<DateTimeOriginal" -dateformat "%%Y/%%m_%%d/%%Y%%m%%d_%%H%%M%%S%%%%-c.%%%%e" .
 exiftool -preserve -overwrite_original -fixbase -progress --composite -fast2 -ignoreMinorErrors -ext mov -r "-FileName<CreateDate" -dateformat "%%Y/%%m_%%d/%%Y%%m%%d_%%H%%M%%S%%%%-c.%%%%e" .
 
