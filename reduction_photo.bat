@@ -9,7 +9,11 @@ echo off
      cd "%~pn1"
  )
 if not exist reduit md reduit
+cd reduit
 if not exist "%~n1" md "%~n1"
+cd ..
+if not exist "%~n1" md %~n1
+
 echo reduction des photos
 nconvert -out jpeg -i -opthuff -o reduit\%~n1\%% -q 80 -ratio -rtype lanczos -opthuff -keepfiledate -buildexifthumb -resize 800 600 -rflag orient *.jpg
 nconvert -out jpeg -rmeta -keepfiledate -rexifthumb -opthuff -o %~n1\%%-th.jpg -i -q 60 -ratio -rtype lanczos -resize 144 144 -rflag orient *.jpg
